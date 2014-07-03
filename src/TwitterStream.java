@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class TwitterStream {
 	
 	private String created_at; 
-	private long id;
+	private String id;
 	private String id_str;
 	private String text;
 	private String source;	
@@ -44,11 +44,11 @@ public class TwitterStream {
 		this.created_at = created_at;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

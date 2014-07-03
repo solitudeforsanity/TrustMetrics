@@ -1,0 +1,8 @@
+CreatedAt,ID,IDString,Source,Truncated,InReplyToStatusID,InReplyToStatusIDString,InReplyToUserID,InReplyToUserIDString,InReplyToScreenName,USERDATA,GEO,Coordinates,Place,Contributors,RetweetCount,FavouriteCount,Favourited,Retweeted,PossiblySensitive,Language
+0,484431437417152514,484431437417152514,"<a href=""https://about.twitter.com/products/tweetdeck"" rel=""nofollow"">TweetDeck</a>",false,,,,,,,,,,,,,,,,
+0,484431437417152514,484431437417152514,"<a href=""https://about.twitter.com/products/tweetdeck"" rel=""nofollow"">TweetDeck</a>",false,,,,,,,,,,,,,,,,
+0,484431437417152514,484431437417152514,"<a href=""https://about.twitter.com/products/tweetdeck"" rel=""nofollow"">TweetDeck</a>",false,,,,,,,,,,,,,,,,
+0,484431437417152514,484431437417152514,"<a href=""https://about.twitter.com/products/tweetdeck"" rel=""nofollow"">TweetDeck</a>",false,,,,,,,,,,,,,,,,
+0,484431437417152514,484431437417152514,"<a href=""https://about.twitter.com/products/tweetdeck"" rel=""nofollow"">TweetDeck</a>",false,,,,,,,,,,,29,0,,,,
+0,484431437417152514,484431437417152514,"<a href=""https://about.twitter.com/products/tweetdeck"" rel=""nofollow"">TweetDeck</a>",false,,,,,,,,,,,29,0,,,,
+0,,,,,,,,,,,,,,,,,false,false,false,en

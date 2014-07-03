@@ -5,136 +5,115 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.codehaus.jackson.JsonParseException;
-import org.json.CDL;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.apache.log4j.Logger;
 
-import antlr.TokenStream;
-
-
-
-//import org.codehaus.jackson.map.ObjectMapper;
-//import org.codehaus.jackson.map.DeserializationConfig.Feature;
-//import sun.org.mozilla.javascript.internal.json.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.northconcepts.datapipeline.core.DataEndpoint;
 import com.northconcepts.datapipeline.core.DataReader;
 import com.northconcepts.datapipeline.core.DataWriter;
+import com.northconcepts.datapipeline.core.Messages;
 import com.northconcepts.datapipeline.core.StreamWriter;
+import com.northconcepts.datapipeline.csv.CSVReader;
 import com.northconcepts.datapipeline.csv.CSVWriter;
 import com.northconcepts.datapipeline.job.JobTemplate;
 import com.northconcepts.datapipeline.json.JsonReader;
 import com.northconcepts.datapipeline.transform.BasicFieldTransformer;
+import com.northconcepts.datapipeline.transform.SetField;
 import com.northconcepts.datapipeline.transform.TransformingReader;
+import com.northconcepts.datapipeline.core.Field;
+import com.northconcepts.datapipeline.core.Record;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-//import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
+import java.io.PrintWriter;
+import java.util.Hashtable;
 
-//import org.codehaus.jackson.map.JsonMappingException;
-
- 
 public class RetrieveTwitterFeeds 
 {
 	  static String AccessToken = "22440636-aAsWewFH4XsVldICls5Bpy1LTgiaIuXIxWqBRWgtb";
 	  static String AccessSecret = "xuhcY9h77v6fpZuIXNQj6MDH1BjjJbpA7RcjZZXg1eSbd";
 	  static String ConsumerKey = "jXIycnRHrIFZQ6FbDdLZ0raaS";
 	  static String ConsumerSecret = "6sRLrmEtbaoGAlNyXYFo1Rgb9FeuDYbn7hccHZsDfBAXyNfyXA";
- 
-	/**
-	 * @param args
-	 */
+	  static Hashtable<String, String> twitterAccountDetails = new Hashtable<String, String>();
+	  public static final Logger log = DataEndpoint.log; 
 	
 	public static void main(String[] args) throws Exception
 	{
-		OAuthConsumer consumer = new CommonsHttpOAuthConsumer(
-                ConsumerKey,
-                ConsumerSecret);
+		OAuthConsumer consumer = new CommonsHttpOAuthConsumer(ConsumerKey, ConsumerSecret);
         consumer.setTokenWithSecret(AccessToken, AccessSecret);
-       // getTweets(consumer,"https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=guardian&count=1");
-        createCSV();
-        //createTwitterObjects(); 
-	}
 
-	private static void createCSV() {
-		 String url = "http://www.google.com/finance/info?client=ig&q=msft,orcl,adbe";
-		 
-	        BufferedReader input;
-			try {
-				input = new BufferedReader(new InputStreamReader(new URL(url).openStream(), "UTF-8"));
-				  // remove preceding slashes from stream
-		        input.readLine();
-		        input.read();
-		        input.read();
-		        DataReader reader = new JsonReader(input)
-	            .addField("symbol", "//array/object/t")
-	            .addField("exchange", "//array/object/e")
-	            .addField("price", "//array/object/l")
-	            .addField("change", "//array/object/c")
-	            .addRecordBreak("//array/object");
-	         
-	        reader = new TransformingReader(reader)
-	            .add(new BasicFieldTransformer("price").stringToDouble())
-	            .add(new BasicFieldTransformer("change").stringToDouble());
-	            
-	         
-	        DataWriter writer = new  CSVWriter(new OutputStreamWriter(System.out));
-	 
-	        JobTemplate.DEFAULT.transfer(reader, writer);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	       
-	      
-	         
-	 
-	        
-		
+        File file = new File("../TrustMetricsTwitter/files/LastTweetID.txt");
+    	String[][] arrayLine = new String[5][2];
+        
+        if (file.length() > 0) {
+        	BufferedReader br = new BufferedReader(new FileReader("../TrustMetricsTwitter/files/LastTweetID.txt"));        
+        	String[] word = new String[10]; 
+        	String line;
+        	String wholeString = ""; 
+        	while ((line = br.readLine()) != null) {
+        		wholeString += line + " ";
+        	}
+        
+        	word = wholeString.split("[\\p{Punct}\\s]+");
+        	
+        	int count = 0;
+        	for (int i=0; i<5; i++){
+        		for (int j=0; j<2; j++){
+        			arrayLine[i][j] = word[count];
+        			count++;
+        		}
+        	}
+        	br.close();
+        }
+        boolean firstTime = true; 
+        if (arrayLine[0][0] == null)
+        {	
+        	firstTime = true; 
+        	System.out.println("Inside zero arrayline");
+        	twitterAccountDetails.put("Swansea","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Swansea_Alumni&include_entities=true&include_rts=true&count=2");
+        	twitterAccountDetails.put("Guardian","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=guardian&count=2&include_entities=true&include_rts=true");
+        	twitterAccountDetails.put("CNN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=CNN&count=2&include_entities=true&include_rts=true");
+        	twitterAccountDetails.put("BBCWorld","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCWorld&count=2&include_entities=true&include_rts=true");
+        	twitterAccountDetails.put("FinancialTimes","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FinancialTimes&count=2&include_entities=true&include_rts=true");
+        }
+        else 
+        {	
+        	System.out.println("Inside one arrayline");
+        	firstTime = false; 
+        	twitterAccountDetails.put("Swansea","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Swansea_Alumni&include_entities=true&include_rts=true&count=2&since_id="+arrayLine[0][1]);
+        	twitterAccountDetails.put("Guardian","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=guardian&count=2&include_entities=true&include_rts=true&since_id="+arrayLine[1][1]);
+        	twitterAccountDetails.put("CNN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=CNN&count=2&include_entities=true&include_rts=true&since_id="+arrayLine[2][1]);
+        	twitterAccountDetails.put("BBCWorld","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCWorld&count=2&include_entities=true&include_rts=true&since_id="+arrayLine[3][1]);
+        	twitterAccountDetails.put("FinancialTimes","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FinancialTimes&count=2&include_entities=true&include_rts=true&since_id="+arrayLine[4][1]);
+        }
+        
+        System.out.println(twitterAccountDetails);
+        
+        for (String key : twitterAccountDetails.keySet()){
+        	getTweetsInJSON(consumer, key, twitterAccountDetails.get(key));
+        	saveLastID(key,firstTime); 
+        }
+        
+        for (String key : twitterAccountDetails.keySet()){
+        	createCSVTwitter(key);       	
+        }
 	}
-
-	public static void getTweets(OAuthConsumer OAuthConsumerKeyandSecret, String requestString) throws OAuthCommunicationException,OAuthExpectationFailedException, OAuthMessageSignerException
-	{
-		HttpGet request = new HttpGet(requestString);
+	
+	private static void getTweetsInJSON(OAuthConsumer OAuthConsumerKeyandSecret, String twitterAccountName, String twitterAccountURL) throws OAuthCommunicationException,OAuthExpectationFailedException, OAuthMessageSignerException
+	{		
+		HttpGet request = new HttpGet(twitterAccountURL);
 		OAuthConsumerKeyandSecret.sign(request);
  
         HttpClient client = HttpClientBuilder.create().build();
@@ -142,103 +121,106 @@ public class RetrieveTwitterFeeds
 			HttpResponse response = client.execute(request);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String JSONString = IOUtils.toString(response.getEntity().getContent());
-			
-			Writer jsonObjectWriter = new BufferedWriter(new FileWriter("../TrustMetricsTwitter/files/JSONData.txt",true));
-			jsonObjectWriter.append(JSONString);
-			jsonObjectWriter.close();
-			
-			
-		    // String csv = CDL.rowToString(JSONString);
-		   //  FileUtils.writeStringToFile(file, csv);
-		//	JSONArray array = CDL.toJSONArray(JSONString);
-		   //  System.out.println(array);
-	        //System.out.println(statusCode + ":" + response.getStatusLine().getReasonPhrase());
-	        //System.out.println(JSONString);
+			System.out.println("Writing Status Code For Retreiving Tweets from " + twitterAccountName + " : " + statusCode);
+			PrintWriter jsonObjectWriter = new PrintWriter("../TrustMetricsTwitter/files/"+twitterAccountName+"JSON");
+			jsonObjectWriter.write(JSONString);
+			jsonObjectWriter.close();			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}/* catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	*/	
+		}	
 	}
 	
-	private static void createTwitterObjects() {
-		// TODO Auto-generated method stub
+	private static void saveLastID(String twitterStreamKey, boolean firstTime) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-		
-		List<TwitterStream> publisheDataList;
-		
+		mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);		
 		try {
-			TwitterStream[] stream = mapper.readValue(new File("../TrustMetricsTwitter/files/JSONData.txt"), TwitterStream[].class);
-			for (int i=0; i<stream.length ; i++){
-			System.out.println(stream[i]);}
-		} catch (com.fasterxml.jackson.core.JsonParseException e2) {
-			// TODO Auto-generated catch block
+			TwitterStream[] stream = mapper.readValue(new File("../TrustMetricsTwitter/files/" + twitterStreamKey + "JSON"), TwitterStream[].class);	
+			
+			if (stream != null && stream.length > 0)
+			{
+				String line = null; 
+				String oldText = "";
+				//
+				if (firstTime == false) {
+					BufferedReader fileReader = new BufferedReader(new FileReader("../TrustMetricsTwitter/files/LastTweetID.txt"));
+					while ((line = fileReader.readLine()) != null)
+					{
+						oldText += line + "\n";					
+					}
+					fileReader.close();
+				
+					String newText = oldText.replaceAll(twitterStreamKey + "\\s.*", twitterStreamKey + "  " + stream[0].getId());
+					System.out.println("INSIDE THIS");
+					PrintWriter writer = new PrintWriter("../TrustMetricsTwitter/files/LastTweetID.txt");
+					writer.print(newText);
+					writer.close();
+				}
+				else 
+				{
+					FileWriter writer = new FileWriter("../TrustMetricsTwitter/files/LastTweetID.txt",true);
+					String newText = twitterStreamKey + " " + stream[0].getId() + "\n";
+					System.out.println("INSIDE ELSE");
+					writer.append(newText);
+					writer.close();
+				}
+			}
+		} catch (com.fasterxml.jackson.core.JsonParseException e2) {			
 			e2.printStackTrace();
 		} catch (JsonMappingException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		} catch (IOException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-	    //SimpleModule module = new SimpleModule(JacksonList.class.getName());
-	   // module.setMixInAnnotation(Object.class, Mixins.class);
-
-	   // mapper.registerModule(module);
-
-	  /*  try {
-			testWriteReadObject(mapper, new TwitterStream("foo"), TwitterStream.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	    ArrayList<TwitterStream> ldv = new ArrayList<TwitterStream>();
-	    ldv.add(new TwitterStream("name1"));
-	    ldv.add(new TwitterStream("name2"));
-
-	    try {
-			testWriteReadObject(mapper, ldv, ArrayList.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		//try {
-			//TwitterStream twitterStream = mapper.readValue(new File("../TrustMetricsTwitter/files/JSONData.txt"), TwitterStream.class);
 			
-		/*	try {
-				publisheDataList = mapper.convertValue(new FileReader("../TrustMetricsTwitter/files/JSONData.txt"), mapper.getTypeFactory().constructCollectionType(List.class, TwitterStream.class));
-				System.out.println(publisheDataList);
-			} catch (IllegalArgumentException | FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+	}
+
+	private static void createCSVTwitter(String twitterUserKey) throws FileNotFoundException {
+	       
+		String FILE = "../TrustMetricsTwitter/files/" + twitterUserKey + "JSON";
+				
+		DataReader reader = new JsonReader(new File(FILE))
+	            .addField("CreatedAt", "//array/object/created_at")
+	            .addField("ID", "//array/object/id")
+	            .addField("IDString", "//array/object/id_str")
+	           //.addField("Source", "//array/object/text")
+	            .addField("Source", "//array/object/source")
+	            .addField("Truncated", "//array/object/truncated")
+	            .addField("InReplyToStatusID", "//array/object/in_reply_to_status_id")
+	            .addField("InReplyToStatusIDString", "//array/object/in_reply_to_status_id_str")
+	            .addField("InReplyToUserID", "//array/object/in_reply_to_user_id")
+	            .addField("InReplyToUserIDString", "//array/object/in_reply_to_user_id_str")
+	            .addField("InReplyToScreenName", "//array/object/in_reply_to_screen_name")
+	            .addField("USERDATA", "//array/object/user/id")
+	            .addField("GEO", "//array/object/geo")
+	            .addField("Coordinates", "//array/object/coordinates")
+	            .addField("Place", "//array/object/place")
+	            .addField("Contributors", "//array/object/contributors")
+	            .addField("RetweetCount", "//array/object/retweet_count")
+	            .addField("FavouriteCount", "//array/object/favorite_count")
+	            .addField("Favourited", "//array/object/favorited")
+	            .addField("Retweeted", "//array/object/retweeted")
+	            .addField("PossiblySensitive", "//array/object/possibly_sensitive")
+	            .addField("Language", "//array/object/lang")
+	            .addRecordBreak("//array/object");
+		        
+	       DataWriter writer = new  CSVWriter(new File("../TrustMetricsTwitter/files/CSVData.csv"));	        
+	       System.out.println(writer);
+	       JobTemplate.DEFAULT.transfer(reader, writer);					
 	}
 	
-	// Look at tests to see if they are necessary uncomment below 
-	/*private static void testWriteReadObject(ObjectMapper mapper, Object toTest, Class<?> objectClass)
-	        throws JsonProcessingException, IOException, JsonParseException, JsonMappingException {
-	    String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(toTest);
-	    System.out.println(json);
-	    Object o = mapper.readValue(json, objectClass);
-	    if (o.equals(toTest)) 
-	        System.out.println("Objects are equal");
-	    else
-	        System.err.println("Objects are NOT equal");
-	}*/
+	public static void transformData(){
+		 DataReader readerModifier = new CSVReader(new File("../TrustMetricsTwitter/files/CSVData.csv"))
+         .setFieldNamesInFirstRow(true);
+     
+     TransformingReader transformingReader = new TransformingReader(readerModifier);
+     
+     // Since CSV fields are strings, they need to be parsed before subtraction
+     transformingReader.add(new SetField("Id", 
+             "number"));
+    // DataWriter writerModify = new  CSVWriter(new File("../TrustMetricsTwitter/files/CSVData.csv"));
+     JobTemplate.DEFAULT.transfer(transformingReader, new StreamWriter(System.out));
+     log.info(Messages.getCurrent());
+	}
 }
