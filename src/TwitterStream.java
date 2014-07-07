@@ -25,7 +25,7 @@ public class TwitterStream {
 	//private String id_str = " ";
 	private String geo;
 	private String coordinates;
-	private String place;
+	//private String place;
 	private String contributors;
 	private int retweet_count;
 	private int favorite_count;
@@ -138,14 +138,6 @@ public class TwitterStream {
 
 	public void setCoordinates(String coordinates) {
 		this.coordinates = coordinates;
-	}
-
-	public String getPlace() {
-		return place;
-	}
-
-	public void setPlace(String place) {
-		this.place = place;
 	}
 
 	public String getContributors() {
