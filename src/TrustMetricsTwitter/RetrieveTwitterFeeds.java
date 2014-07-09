@@ -1,3 +1,4 @@
+package TrustMetricsTwitter; 
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -20,11 +21,17 @@ import com.northconcepts.datapipeline.core.DataEndpoint;
 import com.northconcepts.datapipeline.core.DataReader;
 import com.northconcepts.datapipeline.core.DataWriter;
 import com.northconcepts.datapipeline.core.Field;
+import com.northconcepts.datapipeline.core.Record;
 import com.northconcepts.datapipeline.core.StreamWriter;
+import com.northconcepts.datapipeline.csv.CSVReader;
 import com.northconcepts.datapipeline.csv.CSVWriter;
 import com.northconcepts.datapipeline.job.JobTemplate;
 import com.northconcepts.datapipeline.json.JsonReader;
+import com.northconcepts.datapipeline.json.builder.JsonField;
 import com.northconcepts.datapipeline.transform.BasicFieldTransformer;
+import com.northconcepts.datapipeline.transform.SetCalculatedField;
+import com.northconcepts.datapipeline.transform.SetField;
+import com.northconcepts.datapipeline.transform.Transformer;
 import com.northconcepts.datapipeline.transform.TransformingReader;
 import com.northconcepts.datapipeline.validate.ValidatingReader;
 import com.northconcepts.datapipeline.filter.FieldFilter;
@@ -140,12 +147,11 @@ public class RetrieveTwitterFeeds
         }
         
         for (String key : twitterAccountDetails.keySet()){
-        	createCSVBasicTweetData(key);     	
-        }
-        
+        	createCSVBasicTweetData(key);   
+        }      
         //getUserDataJSON(consumer,userDataURL);
 	}
-	
+
 	private static void getUserDataJSON (OAuthConsumer OAuthConsumerKeyandSecret, String userAccountURL) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException, ClientProtocolException, IOException{
 		HttpGet userAccountRequest = new HttpGet(userAccountURL);
 		OAuthConsumerKeyandSecret.sign(userAccountRequest);
@@ -234,7 +240,7 @@ public class RetrieveTwitterFeeds
 		try {
 			TwitterStream[] stream = mapper.readValue(new File(FILE), TwitterStream[].class);				
 			if (stream != null && stream.length > 0) 
-			{
+			{		
 				DataReader reader = new JsonReader(new File(FILE))
 	            .addField("CreatedAt", "/array/object/created_at")
 	            .addField("ID", "/array/object/id")
@@ -245,6 +251,7 @@ public class RetrieveTwitterFeeds
 	            .addField("InReplyToUserID", "/array/object/in_reply_to_user_id")
 	            .addField("InReplyToScreenName", "/array/object/in_reply_to_screen_name")	
 	            .addField("UserID", "/array/object/user/object/id")	
+	            .addField("UserScreenName", "/array/object/user/object/screen_name")	
 	            .addField("GEO", "/array/object/geo")
 	            .addField("Coordinates", "/array/object/coordinates")
 	            .addField("PlaceID", "/array/object/place/object/id")
@@ -273,7 +280,7 @@ public class RetrieveTwitterFeeds
 	            .addField("Retweeted", "/array/object/retweeted")
 	            .addField("PossiblySensitive", "/array/object/possibly_sensitive")
 	            .addField("Language", "/array/object/lang")
-				.addRecordBreak("/array/object"); 
+				.addRecordBreak("/array/object"); 			
 				
 			    ValidatingReader validatingReader = new ValidatingReader(reader)
 	            .setExceptionOnFailure(false)
@@ -282,11 +289,17 @@ public class RetrieveTwitterFeeds
 				validatingReader.add(new FieldFilter("ID")
                 .addRule(new IsNotNull()));
 								
-				reader = new TransformingReader(reader)
-					.add(new BasicFieldTransformer("Indices")); 
-					        				
+				TransformingReader finalReader = new TransformingReader(validatingReader);
+				finalReader.add(new SetField("Classifier",1))
+							.add (new Transformer(){public boolean transform(Record record) throws Throwable {
+								// creates an 'TweetLength' field
+								Field TweetLength = record.getField("TweetLength", true);
+								Field actualTweet = record.getField("ActualTweet");
+								TweetLength.setValue(actualTweet.toString().length() - 30); 		                
+								return true;}});
+								        				
 				DataWriter writer = new  CSVWriter(new File("../TrustMetricsTwitter/files/IndividualCSVFiles/" + twitterUserKey + ".csv" ));	 
-				JobTemplate.DEFAULT.transfer(validatingReader, writer);	
+				JobTemplate.DEFAULT.transfer(finalReader, writer);	
 				reader.close();
 				writer.close();
 				System.out.println("Successfully created CSV Files");
