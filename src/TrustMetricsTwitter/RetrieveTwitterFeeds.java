@@ -56,11 +56,128 @@ public class RetrieveTwitterFeeds
 	  static String ConsumerSecret = "6sRLrmEtbaoGAlNyXYFo1Rgb9FeuDYbn7hccHZsDfBAXyNfyXA";
 	  static Hashtable<String, String> twitterAccountDetails = new Hashtable<String, String>();
 	  public static final Logger log = DataEndpoint.log;
+	  //20 News Websites 
 	  public static final String userDataURL = "https://api.twitter.com/1.1/users/lookup.json?screen_name=Independent,nytimes,guardian,TheEconomist,USATODAY,BloombergNews,AP,msnbc,Forbes,FinancialTimes,"
 	  		+ "BBCWorld,timesofindia,Reuters,WSJ,CNET,CBSNews,HuffingtonPost,dailytelegraph,CNN,ABC";
+	  //25 Fake Sites 
+	  public final static String badUserDataURL = "https://api.twitter.com/1.1/users/lookup.json?screen_name=TheFakeCNN,NYTOnIt,TheOnion,FakeSTcom,TheFakeESPN,BreakingNews,FakeYahooNews,NotSportsCenter,newsthump,BBCMews,feministtswift," + 
+									"FakeAPStylebook,BBCSporf,PinterestFake,Bill_Nye_tho,SadPaulGiamatti,SeinfeldToday,Seinfeld2000,NotCoatFactory,TomHankThatsMe,notzuckerberg,Jesus_M_Christ,FakeSteranko,Kimkierkegaard,PrinceTweets2U";
+	  public final String goodUserFileLocation = "../TrustMetricsTwitter/files/UserAccounts/UserAccountInfoJSON";
+	  public final static String badUserFileLocation = "../TrustMetricsTwitter/files/UserAccounts/BadAccountInfoJSON"; 
 	 
 	public static void main(String[] args) throws Exception
 	{
+		//mainForGoodUserData();
+        mainForBadUserData();
+	}
+
+	private static void mainForBadUserData() throws IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
+		OAuthConsumer consumer = new CommonsHttpOAuthConsumer(ConsumerKey, ConsumerSecret);
+        consumer.setTokenWithSecret(AccessToken, AccessSecret);
+        
+        File file = new File("../TrustMetricsTwitter/files/LastBadTweetID.txt");
+    	String[][] arrayLine = new String[25][2];
+        
+        if (file.length() > 0) {
+        	BufferedReader br = new BufferedReader(new FileReader("../TrustMetricsTwitter/files/LastBadTweetID.txt"));        
+        	String[] word = new String[50]; 
+        	String line;
+        	String wholeString = ""; 
+        	while ((line = br.readLine()) != null) {
+        		wholeString += line + " ";
+        	}
+        
+        	word = wholeString.split("[\\p{Punct}\\s]+");
+        	
+        	int count = 0;
+        	for (int i=0; i<25; i++){
+        		for (int j=0; j<2; j++){
+        			arrayLine[i][j] = word[count];
+        			count++;
+        		}
+        	}
+        	br.close();
+        }
+        boolean firstTime = true; 
+        if (arrayLine[0][0] == null)
+        {	
+        	firstTime = true; 
+        	System.out.println("Inside zero arrayline Bad");
+        	twitterAccountDetails.put("BreakingNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BreakingNews&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("PrinceTweets2U","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PrinceTweets2U&include_entities=true&include_rts=true&count=200");	
+        	twitterAccountDetails.put("Jesus_M_Christ","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Jesus_M_Christ&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("SeinfeldToday","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SeinfeldToday&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("FakeYahooNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeYahooNews&include_entities=true&include_rts=true&count=200"); 
+        	twitterAccountDetails.put("newsthump","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=newsthump&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("notzuckerberg","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=notzuckerberg&include_entities=true&include_rts=true&count=200");     	
+        	twitterAccountDetails.put("NotSportsCenter","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotSportsCenter&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("FakeAPStylebook","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeAPStylebook&include_entities=true&include_rts=true&count=200"); 
+        	twitterAccountDetails.put("TomHankThatsMe","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TomHankThatsMe&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("NYTOnIt","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NYTOnIt&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("TheFakeCNN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeCNN&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("BBCSporf","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCSporf&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("feministtswift","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=feministtswift&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("TheOnion","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheOnion&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("Kimkierkegaard","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Kimkierkegaard&&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("Bill_Nye_tho","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Bill_Nye_tho&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("FakeSteranko","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSteranko&include_entities=true&include_rts=true&count=200");  
+        	twitterAccountDetails.put("NotCoatFactory","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotCoatFactory&&include_entities=true&include_rts=true&count=200"); 
+        	twitterAccountDetails.put("SadPaulGiamatti","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SadPaulGiamatti&include_entities=true&include_rts=true&count=200");        	
+        	twitterAccountDetails.put("PinterestFake","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PinterestFake&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("Seinfeld2000","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Seinfeld2000&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("BBCMews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCMews&include_entities=true&include_rts=true&count=200");
+        	twitterAccountDetails.put("TheFakeESPN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeESPN&include_entities=true&include_rts=true&count=200");       	
+        	twitterAccountDetails.put("FakeSTcom","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSTcom&include_entities=true&include_rts=true&count=200");	
+        }
+        else 
+        {	
+        	System.out.println("Inside one arrayline Bad");
+        	firstTime = false; 
+        	twitterAccountDetails.put("BreakingNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BreakingNews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[0][1]);
+        	twitterAccountDetails.put("PrinceTweets2U","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PrinceTweets2U&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[1][1]);	
+        	twitterAccountDetails.put("Jesus_M_Christ","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Jesus_M_Christ&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[2][1]);
+        	twitterAccountDetails.put("SeinfeldToday","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SeinfeldToday&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[3][1]);
+        	twitterAccountDetails.put("FakeYahooNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeYahooNews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[4][1]); 
+        	twitterAccountDetails.put("newsthump","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=newsthump&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[5][1]);
+        	twitterAccountDetails.put("notzuckerberg","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=notzuckerberg&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[6][1]);     	
+        	twitterAccountDetails.put("NotSportsCenter","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotSportsCenter&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[7][1]);
+        	twitterAccountDetails.put("FakeAPStylebook","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeAPStylebook&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[8][1]); 
+        	twitterAccountDetails.put("TomHankThatsMe","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TomHankThatsMe&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[9][1]);
+        	twitterAccountDetails.put("NYTOnIt","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NYTOnIt&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[10][1]);
+        	twitterAccountDetails.put("TheFakeCNN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeCNN&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[11][1]);
+        	twitterAccountDetails.put("BBCSporf","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCSporf&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[12][1]);
+        	twitterAccountDetails.put("feministtswift","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=feministtswift&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[13][1]);
+        	twitterAccountDetails.put("TheOnion","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheOnion&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[14][1]);
+        	twitterAccountDetails.put("Kimkierkegaard","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Kimkierkegaard&&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[15][1]);
+        	twitterAccountDetails.put("SadPaulGiamatti","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SadPaulGiamatti&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[16][1]);
+        	twitterAccountDetails.put("NotCoatFactory","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotCoatFactory&&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[17][1]); 
+        	twitterAccountDetails.put("FakeSteranko","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSteranko&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[18][1]);
+        	twitterAccountDetails.put("Bill_Nye_tho","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Bill_Nye_tho&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[19][1]);
+        	twitterAccountDetails.put("Seinfeld2000","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Seinfeld2000&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[20][1]);          	
+        	twitterAccountDetails.put("PinterestFake","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PinterestFake&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[21][1]);
+        	twitterAccountDetails.put("TheFakeESPN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeESPN&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[22][1]);  
+        	twitterAccountDetails.put("BBCMews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCMews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[23][1]); 	     	
+        	twitterAccountDetails.put("FakeSTcom","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSTcom&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[24][1]);	
+        }
+        
+        System.out.println(twitterAccountDetails);
+        String lastIDSaveFileLocation = "../TrustMetricsTwitter/files/LastBadTweetID.txt";
+        int classifier = 0; 
+        
+        for (String key : twitterAccountDetails.keySet()){
+        	//getTweetsInJSON(consumer, key, twitterAccountDetails.get(key));
+        	//saveLastID(key,firstTime,lastIDSaveFileLocation); 
+        }
+        
+        for (String key : twitterAccountDetails.keySet()){
+        	createCSVBasicTweetData(key,classifier);   
+        }      
+        
+        //getUserDataJSON(consumer,badUserDataURL,badUserFileLocation);
+		
+	}
+	
+	private static void mainForGoodUserData() throws IOException, OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException{
 		OAuthConsumer consumer = new CommonsHttpOAuthConsumer(ConsumerKey, ConsumerSecret);
         consumer.setTokenWithSecret(AccessToken, AccessSecret);
         
@@ -115,7 +232,7 @@ public class RetrieveTwitterFeeds
         }
         else 
         {	
-        	System.out.println("Inside one arrayline");
+        	System.out.println("Inside one arrayline Bad");
         	firstTime = false;         	       	
         	twitterAccountDetails.put("Independent","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Independent&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[0][1]);
         	twitterAccountDetails.put("nytimes","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=nytimes&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[1][1]);
@@ -140,19 +257,22 @@ public class RetrieveTwitterFeeds
         }
         
         System.out.println(twitterAccountDetails);
+        String lastIDSaveFileLocation = "../TrustMetricsTwitter/files/LastTweetID.txt";
+        int classifier = 1; 
         
         for (String key : twitterAccountDetails.keySet()){
         	//getTweetsInJSON(consumer, key, twitterAccountDetails.get(key));
-        	//saveLastID(key,firstTime); 
+        	//saveLastID(key,firstTime,lastIDSaveFileLocation); 
         }
         
         for (String key : twitterAccountDetails.keySet()){
-        	createCSVBasicTweetData(key);   
+        	//createCSVBasicTweetData(key,classifier);   
         }      
-        //getUserDataJSON(consumer,userDataURL);
+        
+        //getUserDataJSON(consumer,badUserDataURL,badUserFileLocation);
 	}
 
-	private static void getUserDataJSON (OAuthConsumer OAuthConsumerKeyandSecret, String userAccountURL) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException, ClientProtocolException, IOException{
+	private static void getUserDataJSON (OAuthConsumer OAuthConsumerKeyandSecret, String userAccountURL, String userFileAccountString) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException, ClientProtocolException, IOException{
 		HttpGet userAccountRequest = new HttpGet(userAccountURL);
 		OAuthConsumerKeyandSecret.sign(userAccountRequest);
 		HttpClient userClient = HttpClientBuilder.create().build();
@@ -160,10 +280,10 @@ public class RetrieveTwitterFeeds
 		int userStatusCode = userResponse.getStatusLine().getStatusCode();
 		String USERJSONString = IOUtils.toString(userResponse.getEntity().getContent());
 		System.out.println("StatusCodeForUserAccountInfo : " + userStatusCode);
-		PrintWriter jsonObjectWriter = new PrintWriter("../TrustMetricsTwitter/files/UserAccountInfoJSON");
+		PrintWriter jsonObjectWriter = new PrintWriter(userFileAccountString);
 		jsonObjectWriter.write(USERJSONString);
 		jsonObjectWriter.close();	
-		createCSVForUserData();
+		createCSVForUserData(userFileAccountString);
 	}
 	
 	private static void getTweetsInJSON(OAuthConsumer OAuthConsumerKeyandSecret, String twitterAccountName, String twitterAccountURL) throws OAuthCommunicationException,OAuthExpectationFailedException, OAuthMessageSignerException
@@ -187,7 +307,7 @@ public class RetrieveTwitterFeeds
 		}	
 	}
 	
-	private static void saveLastID(String twitterStreamKey, boolean firstTime) {
+	private static void saveLastID(String twitterStreamKey, boolean firstTime, String fileName) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -201,7 +321,7 @@ public class RetrieveTwitterFeeds
 				String oldText = "";
 				//
 				if (firstTime == false) {
-					BufferedReader fileReader = new BufferedReader(new FileReader("../TrustMetricsTwitter/files/LastTweetID.txt"));
+					BufferedReader fileReader = new BufferedReader(new FileReader(fileName));
 					while ((line = fileReader.readLine()) != null)
 					{
 						oldText += line + "\n";					
@@ -209,13 +329,13 @@ public class RetrieveTwitterFeeds
 					fileReader.close();
 				
 					String newText = oldText.replaceAll(twitterStreamKey + "\\s.*", twitterStreamKey + "  " + stream[0].getId());
-					PrintWriter writer = new PrintWriter("../TrustMetricsTwitter/files/LastTweetID.txt");
+					PrintWriter writer = new PrintWriter(fileName);
 					writer.print(newText);
 					writer.close();
 				}
 				else 
 				{
-					FileWriter writer = new FileWriter("../TrustMetricsTwitter/files/LastTweetID.txt",true);
+					FileWriter writer = new FileWriter(fileName,true);
 					String newText = twitterStreamKey + " " + stream[0].getId() + "\n";
 					writer.append(newText);
 					writer.close();
@@ -231,7 +351,7 @@ public class RetrieveTwitterFeeds
 			
 	}
 
-	private static void createCSVBasicTweetData(String twitterUserKey) throws FileNotFoundException {
+	private static void createCSVBasicTweetData(String twitterUserKey,int classifier) throws FileNotFoundException {
 	       
 		String FILE = "../TrustMetricsTwitter/files/IndividualJSONFiles/" + twitterUserKey + "JSON";
 		ObjectMapper mapper = new ObjectMapper();
@@ -290,7 +410,7 @@ public class RetrieveTwitterFeeds
                 .addRule(new IsNotNull()));
 								
 				TransformingReader finalReader = new TransformingReader(validatingReader);
-				finalReader.add(new SetField("Classifier",1))
+				finalReader.add(new SetField("Classifier",classifier))
 							.add (new Transformer(){public boolean transform(Record record) throws Throwable {
 								// creates an 'TweetLength' field
 								Field TweetLength = record.getField("TweetLength", true);
@@ -311,9 +431,9 @@ public class RetrieveTwitterFeeds
 		}
 	}
 	
-	private static void createCSVForUserData() throws UnsupportedEncodingException, MalformedURLException, IOException {
-		String FILE = "../TrustMetricsTwitter/files/UserAccountInfoJSON";
-		DataReader reader = new JsonReader(new File(FILE))
+	private static void createCSVForUserData(String fileName) throws UnsupportedEncodingException, MalformedURLException, IOException {
+		
+		DataReader reader = new JsonReader(new File(fileName))
 		.addField("ID", "/array/object/id")
         .addField("Name", "/array/object/name")
         .addField("ScreenName", "/array/object/screen_name")
@@ -351,7 +471,7 @@ public class RetrieveTwitterFeeds
         .addField("ShowAllInlineMedia", "/array/object/show_all_inline_media")
         .addRecordBreak("/array/object");  
 		
-		DataWriter writer = new  CSVWriter(new File("../TrustMetricsTwitter/files/UserAccountInfo.csv" ));	      
+		DataWriter writer = new  CSVWriter(new File(fileName + "CSV.csv"));	      
 		JobTemplate.DEFAULT.transfer(reader, writer); 
 		
 		reader.close();
