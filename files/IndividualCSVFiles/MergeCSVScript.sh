@@ -1,4 +1,4 @@
-OutFileName="/Users/Kaushy/Courses/Project/TrustMetricsTwitter/files/FinalCSV/1.csv"                       # Fix the output name
+OutFileName="/Users/Kaushy/Courses/Project/TrustMetricsTwitter/files/FinalCSV/3.csv"                       # Fix the output name
 i=0                                       # Reset a counter
 for filename in ./*.csv; do
     if [ "$filename"  != "$OutName" ] ;      # Avoid recursion

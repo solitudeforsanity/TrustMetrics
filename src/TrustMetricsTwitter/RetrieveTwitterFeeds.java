@@ -67,8 +67,8 @@ public class RetrieveTwitterFeeds
 	 
 	public static void main(String[] args) throws Exception
 	{
-		//mainForGoodUserData();
-        mainForBadUserData();
+		mainForGoodUserData();
+        //mainForBadUserData();
 	}
 
 	private static void mainForBadUserData() throws IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
@@ -135,8 +135,8 @@ public class RetrieveTwitterFeeds
         	firstTime = false; 
         	twitterAccountDetails.put("BreakingNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BreakingNews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[0][1]);
         	twitterAccountDetails.put("PrinceTweets2U","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PrinceTweets2U&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[1][1]);	
-        	twitterAccountDetails.put("Jesus_M_Christ","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Jesus_M_Christ&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[2][1]);
-        	twitterAccountDetails.put("SeinfeldToday","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SeinfeldToday&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[3][1]);
+        	twitterAccountDetails.put("Jesus_M_Christ","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Jesus_M_Christ&include_entities=true&include_rts=true&count=4&since_id="+arrayLine[2][1]);
+        	twitterAccountDetails.put("SeinfeldToday","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SeinfeldToday&include_entities=true&include_rts=true&count=4");
         	twitterAccountDetails.put("FakeYahooNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeYahooNews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[4][1]); 
         	twitterAccountDetails.put("newsthump","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=newsthump&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[5][1]);
         	twitterAccountDetails.put("notzuckerberg","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=notzuckerberg&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[6][1]);     	
@@ -153,9 +153,9 @@ public class RetrieveTwitterFeeds
         	twitterAccountDetails.put("NotCoatFactory","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotCoatFactory&&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[17][1]); 
         	twitterAccountDetails.put("FakeSteranko","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSteranko&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[18][1]);
         	twitterAccountDetails.put("Bill_Nye_tho","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Bill_Nye_tho&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[19][1]);
-        	twitterAccountDetails.put("Seinfeld2000","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Seinfeld2000&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[20][1]);          	
+        	twitterAccountDetails.put("Seinfeld2000","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Seinfeld2000&include_entities=true&include_rts=true&count=4&since_id="+arrayLine[20][1]);          	
         	twitterAccountDetails.put("PinterestFake","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PinterestFake&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[21][1]);
-        	twitterAccountDetails.put("TheFakeESPN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeESPN&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[22][1]);  
+        	twitterAccountDetails.put("TheFakeESPN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeESPN&include_entities=true&include_rts=true&count=4");  
         	twitterAccountDetails.put("BBCMews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCMews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[23][1]); 	     	
         	twitterAccountDetails.put("FakeSTcom","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSTcom&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[24][1]);	
         }
@@ -170,7 +170,7 @@ public class RetrieveTwitterFeeds
         }
         
         for (String key : twitterAccountDetails.keySet()){
-        	createCSVBasicTweetData(key,classifier);   
+        	//createCSVBasicTweetData(key,classifier);   
         }      
         
         //getUserDataJSON(consumer,badUserDataURL,badUserFileLocation);
@@ -232,7 +232,7 @@ public class RetrieveTwitterFeeds
         }
         else 
         {	
-        	System.out.println("Inside one arrayline Bad");
+        	System.out.println("Inside one arrayline");
         	firstTime = false;         	       	
         	twitterAccountDetails.put("Independent","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Independent&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[0][1]);
         	twitterAccountDetails.put("nytimes","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=nytimes&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[1][1]);
@@ -266,7 +266,7 @@ public class RetrieveTwitterFeeds
         }
         
         for (String key : twitterAccountDetails.keySet()){
-        	//createCSVBasicTweetData(key,classifier);   
+        	createCSVBasicTweetData(key,classifier);   
         }      
         
         //getUserDataJSON(consumer,badUserDataURL,badUserFileLocation);
