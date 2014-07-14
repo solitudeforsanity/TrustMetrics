@@ -1,2 +1,2 @@
-paste -d, 3.csv >> Final.csv
-mv 3.csv /Users/Kaushy/Courses/Project/TrustMetricsTwitter/files/OlderVersionCSVs/
+paste -d, 4.csv >> Final.csv
+mv 4.csv /Users/Kaushy/Courses/Project/TrustMetricsTwitter/files/OlderVersionCSVs/

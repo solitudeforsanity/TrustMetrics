@@ -67,8 +67,8 @@ public class RetrieveTwitterFeeds
 	 
 	public static void main(String[] args) throws Exception
 	{
-		mainForGoodUserData();
-        //mainForBadUserData();
+		//mainForGoodUserData();
+        mainForBadUserData();
 	}
 
 	private static void mainForBadUserData() throws IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
@@ -133,31 +133,31 @@ public class RetrieveTwitterFeeds
         {	
         	System.out.println("Inside one arrayline Bad");
         	firstTime = false; 
-        	twitterAccountDetails.put("BreakingNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BreakingNews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[0][1]);
-        	twitterAccountDetails.put("PrinceTweets2U","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PrinceTweets2U&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[1][1]);	
-        	twitterAccountDetails.put("Jesus_M_Christ","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Jesus_M_Christ&include_entities=true&include_rts=true&count=4&since_id="+arrayLine[2][1]);
-        	twitterAccountDetails.put("SeinfeldToday","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SeinfeldToday&include_entities=true&include_rts=true&count=4");
-        	twitterAccountDetails.put("FakeYahooNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeYahooNews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[4][1]); 
-        	twitterAccountDetails.put("newsthump","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=newsthump&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[5][1]);
-        	twitterAccountDetails.put("notzuckerberg","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=notzuckerberg&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[6][1]);     	
-        	twitterAccountDetails.put("NotSportsCenter","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotSportsCenter&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[7][1]);
-        	twitterAccountDetails.put("FakeAPStylebook","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeAPStylebook&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[8][1]); 
-        	twitterAccountDetails.put("TomHankThatsMe","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TomHankThatsMe&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[9][1]);
-        	twitterAccountDetails.put("NYTOnIt","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NYTOnIt&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[10][1]);
-        	twitterAccountDetails.put("TheFakeCNN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeCNN&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[11][1]);
-        	twitterAccountDetails.put("BBCSporf","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCSporf&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[12][1]);
-        	twitterAccountDetails.put("feministtswift","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=feministtswift&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[13][1]);
-        	twitterAccountDetails.put("TheOnion","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheOnion&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[14][1]);
-        	twitterAccountDetails.put("Kimkierkegaard","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Kimkierkegaard&&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[15][1]);
-        	twitterAccountDetails.put("SadPaulGiamatti","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SadPaulGiamatti&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[16][1]);
-        	twitterAccountDetails.put("NotCoatFactory","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotCoatFactory&&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[17][1]); 
-        	twitterAccountDetails.put("FakeSteranko","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSteranko&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[18][1]);
-        	twitterAccountDetails.put("Bill_Nye_tho","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Bill_Nye_tho&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[19][1]);
-        	twitterAccountDetails.put("Seinfeld2000","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Seinfeld2000&include_entities=true&include_rts=true&count=4&since_id="+arrayLine[20][1]);          	
-        	twitterAccountDetails.put("PinterestFake","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PinterestFake&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[21][1]);
-        	twitterAccountDetails.put("TheFakeESPN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeESPN&include_entities=true&include_rts=true&count=4");  
-        	twitterAccountDetails.put("BBCMews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCMews&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[23][1]); 	     	
-        	twitterAccountDetails.put("FakeSTcom","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSTcom&include_entities=true&include_rts=true&count=200&since_id="+arrayLine[24][1]);	
+        	twitterAccountDetails.put("BreakingNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BreakingNews&include_entities=true&include_rts=true&since_id="+arrayLine[0][1]);
+        	twitterAccountDetails.put("PrinceTweets2U","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PrinceTweets2U&include_entities=true&include_rts=true&since_id="+arrayLine[1][1]);	
+        	twitterAccountDetails.put("Jesus_M_Christ","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Jesus_M_Christ&include_entities=true&include_rts=true&count=5");
+        	twitterAccountDetails.put("SeinfeldToday","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SeinfeldToday&include_entities=true&include_rts=true&since_id="+arrayLine[3][1]);
+        	twitterAccountDetails.put("FakeYahooNews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeYahooNews&include_entities=true&include_rts=true&count=4"); 
+        	twitterAccountDetails.put("newsthump","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=newsthump&include_entities=true&include_rts=true&since_id="+arrayLine[5][1]);
+        	twitterAccountDetails.put("notzuckerberg","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=notzuckerberg&include_entities=true&include_rts=true&since_id="+arrayLine[6][1]);     	
+        	twitterAccountDetails.put("NotSportsCenter","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotSportsCenter&include_entities=true&include_rts=true&since_id="+arrayLine[7][1]);
+        	twitterAccountDetails.put("FakeAPStylebook","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeAPStylebook&include_entities=true&include_rts=true&since_id="+arrayLine[8][1]); 
+        	twitterAccountDetails.put("TomHankThatsMe","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TomHankThatsMe&include_entities=true&include_rts=true&since_id="+arrayLine[9][1]);
+        	twitterAccountDetails.put("NYTOnIt","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NYTOnIt&include_entities=true&include_rts=true&since_id="+arrayLine[10][1]);
+        	twitterAccountDetails.put("TheFakeCNN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeCNN&include_entities=true&include_rts=true&since_id="+arrayLine[11][1]);
+        	twitterAccountDetails.put("BBCSporf","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCSporf&include_entities=true&include_rts=true&since_id="+arrayLine[12][1]);
+        	twitterAccountDetails.put("feministtswift","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=feministtswift&include_entities=true&include_rts=true&since_id="+arrayLine[13][1]);
+        	twitterAccountDetails.put("TheOnion","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheOnion&include_entities=true&include_rts=true&since_id="+arrayLine[14][1]);
+        	twitterAccountDetails.put("Kimkierkegaard","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Kimkierkegaard&&include_entities=true&include_rts=true&since_id="+arrayLine[15][1]);
+        	twitterAccountDetails.put("SadPaulGiamatti","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SadPaulGiamatti&include_entities=true&include_rts=true&since_id="+arrayLine[16][1]);
+        	twitterAccountDetails.put("NotCoatFactory","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=NotCoatFactory&&include_entities=true&include_rts=true&since_id="+arrayLine[17][1]); 
+        	twitterAccountDetails.put("FakeSteranko","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSteranko&include_entities=true&include_rts=true&since_id="+arrayLine[18][1]);
+        	twitterAccountDetails.put("Bill_Nye_tho","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Bill_Nye_tho&include_entities=true&include_rts=true&since_id="+arrayLine[19][1]);
+        	twitterAccountDetails.put("Seinfeld2000","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Seinfeld2000&include_entities=true&include_rts=true&count=4");          	
+        	twitterAccountDetails.put("PinterestFake","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=PinterestFake&include_entities=true&include_rts=true&since_id="+arrayLine[21][1]);
+        	twitterAccountDetails.put("TheFakeESPN","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=TheFakeESPN&include_entities=true&include_rts=true&since_id="+arrayLine[22][1]);  
+        	twitterAccountDetails.put("BBCMews","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=BBCMews&include_entities=true&include_rts=true&since_id="+arrayLine[23][1]); 	     	
+        	twitterAccountDetails.put("FakeSTcom","https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=FakeSTcom&include_entities=true&include_rts=true&count=4");	
         }
         
         System.out.println(twitterAccountDetails);
@@ -165,8 +165,8 @@ public class RetrieveTwitterFeeds
         int classifier = 0; 
         
         for (String key : twitterAccountDetails.keySet()){
-        	//getTweetsInJSON(consumer, key, twitterAccountDetails.get(key));
-        	//saveLastID(key,firstTime,lastIDSaveFileLocation); 
+        	getTweetsInJSON(consumer, key, twitterAccountDetails.get(key));
+        	saveLastID(key,firstTime,lastIDSaveFileLocation); 
         }
         
         for (String key : twitterAccountDetails.keySet()){
@@ -266,7 +266,7 @@ public class RetrieveTwitterFeeds
         }
         
         for (String key : twitterAccountDetails.keySet()){
-        	createCSVBasicTweetData(key,classifier);   
+        	//createCSVBasicTweetData(key,classifier);   
         }      
         
         //getUserDataJSON(consumer,badUserDataURL,badUserFileLocation);
